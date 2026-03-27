@@ -89,8 +89,7 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-
-    
+    /*
     const int MAX_NLOCATIONS = 20;   // capacity of the location arrays
     Location bottomLeft1, topRight1, // coordinates that define the first input area
         bottomLeft2, topRight2;      // coordinates that define the second input area
@@ -104,6 +103,9 @@ int main(int argc, char *argv[]) {
         nUnionLocs; // number of locations in arrayUnionLocations
         
 
+
+
+    
     // Read bottomLeft1 and topRight1 from standard inputF
     // Read bottomLeft2 and topRight2 from standard input
     bottomLeft1.load(cin);
@@ -153,10 +155,26 @@ int main(int argc, char *argv[]) {
 
     // Print the resulting array of Location objects in the standard output
     PrintArrayLocation(arrayUnionLocations, nLocs);
-    
+    */
 
 
-    
+    VectorLocation practica(9);
+
+
+    for(int i = 0; i < practica.getSize(); i++){
+        practica.at(i).set(i, i , "name");
+    }
+
+    cout << practica.toString();
+
+
+
+
+
+
+
+    return 0;
+
    
 
 
