@@ -41,7 +41,7 @@ struct ArrayClustering{
  * @param capacity The initial capacity of the array. Input parameter
  */
 void InitializeArrayClustering(ArrayClustering arrayClustering, 
-    int capacity=INITIAL_ARRAY_CLUSTERING_CAPACITY);
+    const int capacity=INITIAL_ARRAY_CLUSTERING_CAPACITY);
 
 /**
  * @brief Deallocates the dynamic array of Clustering objects in the provided
@@ -62,7 +62,7 @@ void DeallocateArrayClustering(ArrayClustering arrayClustering);
  * @return The position of the Clustering object in the array if found;
  * -1 otherwise.
  */
-int FindArrayClustering(ArrayClustering arrayClustering,
+int FindArrayClustering(const ArrayClustering arrayClustering,
                         Clustering clustering);
 
 /**

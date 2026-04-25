@@ -22,7 +22,7 @@ using namespace std;
 
 
 
-/*
+
 // Inclusión de ficheros .h que deben eliminarse tras comprobar los tests de unidad
 #include <sstream>
 #include <regex>
@@ -43,7 +43,7 @@ locs.append(loc);
 }
 }
 
-*/
+
 
 
 
@@ -135,7 +135,7 @@ Cluster 4 information:
  */
 int main(int argc, char* argv[]) {
 
-    
+    /*
     VectorLocation locations; // VectorLocation object to store the input locations
     Clustering clustering; // Clustering object
     int K; // number of clusters
@@ -160,4 +160,20 @@ int main(int argc, char* argv[]) {
     
     
     return 0;
+    */
+
+
+    /* TEST 45
+    int n=1; VectorLocation l1(n); double d1; double d2; string name; string ss = std::string("1 ") + string(LOCATION_OTHER)+ " "; istringstream ssin(ss); l1.load(ssin);
+    cout<<l1.toString().c_str()<<ENDL;
+
+    */
+
+    /* TEST 97
+
+    
+    int n=1; VectorLocation l1(n); string ss = std::string("1 ") + string(LOCATION_OTHER)+ " "; istringstream ssin(ss); l1.load(ssin); ssin.clear(); ssin.str(ss); l1.load(ssin);
+    cout<<l1.toString().c_str()<<ENDL;
+    */
+    return 0; 
 }
