@@ -18,9 +18,6 @@
 #include "VectorInt.h"
 #include "VectorLocation.h"
 
-using namespace std;
-
-
 /**
  * @class Clustering
  * @brief This class is used to obtain a clustering of a given set of locations 
@@ -44,7 +41,7 @@ public:
      * the field (_K) for the number of clusters with 0; the field (_isDone)
      * that tells whether the run() method has already been executed 
      * with false; the fields _sumWCV and _numIterations with 0 and the field
-     * _seed with DEFAULT_RANDOM_SEED. 
+     * _seed with DEFAULT_RANDOM_SEED.
      * The fields (_locations, _clusters,  _centroids) are initialized with 
      * the default constructor of their classes. 
      */
@@ -55,7 +52,7 @@ public:
      * Query method
      * @return The number of clusters
      */
-    int getK() const;
+    int getK();
     
     /**
      * @brief Gets the current vector of centroids
@@ -63,7 +60,7 @@ public:
      * @return A const reference to the vector of centroids (a VectorLocation
      * object).
      */
-    const VectorLocation& getCentroids() const;
+    VectorLocation getCentroids();
     
     /**
      * @brief Indicates whether the clustering algorithm (run() method) has 
@@ -72,7 +69,7 @@ public:
      * @return true if the run() method has already been executed for this 
      * Clustering object; false otherwise
      */
-    bool isDone() const;
+    bool isDone();
     
     /**
      * @brief Gets the number of locations in the set of locations of this 
@@ -81,7 +78,7 @@ public:
      * @return The number of locations in the set of locations of this 
      * Clustering
      */
-    int getNumLocations() const;
+    int getNumLocations();
     
     /**
      * @brief Gets the cluster number for the Location determined by the  
@@ -94,7 +91,7 @@ public:
      * clustering algorithm has not been run (_isDone is false), then it returns
      * -1.
      */
-    int clusterOf(const int& locationIndex) const;
+    int clusterOf(int locationIndex);
     
     /**
      * @brief Gets the value of the sum of the within-cluster variances of this 
@@ -105,7 +102,7 @@ public:
      * @return A double with the sum of within-cluster variances of this 
      * Clustering
      */
-    double getSumWCV() const;
+    double getSumWCV();
 
     /**
      * @brief  Gets the number of iterations used in the KMeans 
@@ -117,7 +114,7 @@ public:
      * Query method
      * @return The number of iterations used in the KMeans algorithm
      */
-    int getNumIterations() const;
+    int getNumIterations();
 
     /**
      * @brief  Gets a string with information about the provided cluster (index
@@ -136,7 +133,7 @@ public:
      * clustering algorithm has not been run (_isDone is false) or an 
      * invalid value of cluster is provide, then it returns an empty string.
      */
-    string clusterInfo(const int& cluster) const;
+    std::string clusterInfo(int cluster);
 
     /**
      * @brief Obtains a string with the some statistics data about this 
@@ -147,7 +144,7 @@ public:
      * Query method
      * @return A string with the content described above
      */
-    string getStatistics() const;
+    std::string getStatistics();
 
     /**
      * @brief Indicates whether this Clustering object is equivalent to the 
@@ -163,7 +160,7 @@ public:
      * @return true if this Clustering object is equivalent to the provided 
      * Clustering object (@p other); false otherwise
      */
-    bool isEquivalentTo(const Clustering& other) const;
+    bool isEquivalentTo(Clustering other);
 
     /**
      * @brief Obtains a string with the fields of this Clustering object. 
@@ -217,7 +214,7 @@ Cluster 4 information:
      * Query method
      * @return A string with the content described above
      */
-    string toString() const; 
+    std::string toString(); 
     
     /**
      * @brief Sets the vector of locations (_locations), the value of K (_K)  
@@ -237,7 +234,8 @@ Cluster 4 information:
      * (with srand(seed)) in the initialClusterAssignment() method. 
      * Input parameter
      */
-    void set(const VectorLocation &locations,const int &K,const unsigned int &seed=DEFAULT_RANDOM_SEED);
+    void set(VectorLocation locations, int K, 
+        unsigned int seed=DEFAULT_RANDOM_SEED);
     
     /**
      * @brief Run the clustering algorithm. The clustering algorithm implemented  
@@ -356,10 +354,60 @@ private:
      * $\sum_{p_i \in C_j} squaredDistance(p_i, centroid_{C_j})$
      * @return A double with the sum of within-cluster variances of this 
      * Clustering
-     * query method
+     * Query method
      */
-    double calculateSumWCV() const;
+    double calculateSumWCV();
 }; // end of class Clustering
 
+/**
+ * @brief Overloading of the less-than operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if the sum of within-cluster variances (WCVs) of 
+ * @p clustering1 is less than that of @p clustering2 or if both WCVs are 
+ * equal and the number of iterations of @p clustering1 is less than that of 
+ * @p clustering2; false otherwise
+ */
+bool operator<(const Clustering& clustering1,const  Clustering& clustering2);
+
+/**
+ * @brief Overloading of the greater-than operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if clustering1 > clustering2; false otherwise
+ */
+bool operator>(Clustering clustering1, Clustering clustering2);
+
+/**
+ * @brief Overloading of the equality operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if clustering1 == clustering2; false otherwise
+ */
+bool operator==(Clustering clustering1, Clustering clustering2);
+
+/**
+ * @brief Overloading of the not-equal operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if clustering1 != clustering2; false otherwise
+ */
+bool operator!=(Clustering clustering1, Clustering clustering2);
+
+/**
+ * @brief Overloading of the less-than-or-equal operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if clustering1 <= clustering2; false otherwise
+ */
+bool operator<=(Clustering clustering1, Clustering clustering2);
+
+/**
+ * @brief Overloading of the greater-than-or-equal operator for Clustering class
+ * @param clustering1 A Clustering object. Input parameter
+ * @param clustering2 A Clustering object. Input parameter
+ * @return true if clustering1 >= clustering2; false otherwise
+ */
+bool operator>=(Clustering clustering1, Clustering clustering2);
 #endif /* CLUSTERING_H */
 

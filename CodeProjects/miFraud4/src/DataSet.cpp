@@ -310,3 +310,14 @@ DataSet DataSet::getReducedDataSet(const Clustering& clustering) const{
     
     return toRet;
 }
+
+//i think it's like this not sure tho
+const int& DataSet::operator()(int instanceIndex, int locationIndex) const{
+
+    return _values[instanceIndex][locationIndex];
+}
+
+int& DataSet::operator()(int instanceIndex, int locationIndex){
+    
+    return _values[instanceIndex][locationIndex];
+}

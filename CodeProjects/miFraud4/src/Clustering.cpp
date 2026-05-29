@@ -312,3 +312,17 @@ double Clustering::calculateSumWCV() const{
 
     return result;
 }
+
+
+bool operator<(const Clustering& clustering1,const  Clustering& clustering2){
+    bool condition = false;
+
+    if (clustering1.getSumWCV() < clustering2.getSumWC() ) || ((clustering1.getSumWCV() == clustering2.getSumWC()) && (clustering1.getNumIterations() < clustering2.getNumIterations() )){
+        condition = true;
+    }
+
+
+
+    return condition;
+}
+
