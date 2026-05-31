@@ -44,7 +44,7 @@ public:
      * @param orig the VectorLocation object used as source for the copy. 
      * Input parameter
      */
-    VectorLocation(VectorLocation orig);
+    VectorLocation(const VectorLocation &orig);
     
     /**
      * @brief Destructor
@@ -58,7 +58,7 @@ public:
      * Input parameter
      * @return A reference to this object
      */
-    VectorLocation operator=(VectorLocation orig);
+    VectorLocation& operator=(const VectorLocation& orig);
     
     /**
      * @brief Gets the number of elements in the vector of this object
@@ -66,7 +66,7 @@ public:
      * @return The number of elements
      */
     int getSize() const;
-    
+    void setSize(const int& input);
     /**
      * @brief Gets the capacity of the vector in this object
      * Query method
@@ -192,14 +192,14 @@ public:
      * location.
      * If returns -1 if this vector is empty
      */
-    int nearest(Location location);
+    int nearest(const Location& location) const;
     
     /**
      * Assigns the provided value to all the elements in this vector
      * Modifier method
      * @param location A Location object. Input parameter
      */
-    void assign(Location location);
+    void assign(const Location &location);
 
     /**
      * @brief Reads from the provided input stream the information
@@ -216,7 +216,7 @@ public:
      * number of Location read from the input stream is negative.
      * @param is Input stream. Input/output parameter
      */
-    void load(std::istream is);
+    void load(std::istream& is);
 
     /**
      * @brief Overloading of the [] operator for VectorLocation class
@@ -233,6 +233,9 @@ public:
      * @return A reference to the element at position @p index
      */
     Location& operator[](int index);
+    
+    VectorLocation& grow(int capMod=BLOCK_SIZE);
+    VectorLocation& resize(int toRes);
 
     /**
      * @brief Overloads the operator += for the VectorLocation class. 
@@ -251,7 +254,7 @@ public:
 
 
     friend std::ostream& operator<<(std::ostream& os, const VectorLocation& vector);
-    friend std::istream& operator>>(std::istream is, VectorLocation vector);
+    friend std::istream& operator>>(std::istream& is, VectorLocation& vector);
 private:
     /**
      * Pointer to a dynamic array of Locations
@@ -304,7 +307,7 @@ std::ostream& operator<<(std::ostream& os, const VectorLocation& vector);
  * @param vector The VectorLocation object to be filled. Input/output parameter
  * @return @p is A reference to the input stream
  */
-std::istream& operator>>(std::istream is, VectorLocation vector);
+std::istream& operator>>(std::istream& is, VectorLocation& vector);
 
 #endif /* VECTORLOCATION_H */
 

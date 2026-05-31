@@ -65,7 +65,7 @@ public:
      * @param orig the DataSet object used as source for the copy. 
      * Input parameter
      */
-    DataSet(DataSet orig);
+    DataSet(const DataSet &orig);
     
     /**
      * @brief Destructor
@@ -79,21 +79,21 @@ public:
      * Input parameter
      * @return A reference to this object
      */
-    DataSet operator=(DataSet orig);
+    DataSet& operator=(const DataSet &orig);
 
     /**
      * @brief Gets the number of instances in this DataSet
      * Query method
      * @return The number of instances in this DataSet
      */
-    int getNumInstances();
+    int getNumInstances() const;
     
     /**
      * @brief Gets the number of localizations in this DataSet
      * Query method
      * @return The number of localizations in this DataSet
      */
-    int getNumLocations(); 
+    int getNumLocations() const; 
     
     /**
      * @brief Gets the value for the instance instanceIndex at the localization
@@ -110,7 +110,7 @@ public:
      * @return The value for the instance instanceIndex at the localization
      * locationIndex
      */   
-    int getValue(int instanceIndex, int locationIndex);
+    int getValue(int instanceIndex, int locationIndex) const;
     
     /**
      * @brief Gets the label (integer value) of the instance at the provided
@@ -123,7 +123,7 @@ public:
      * @return The label (integer value) of the instance at the provided
      * position
      */
-    int getLabel(int instanceIndex);
+    int getLabel(int instanceIndex) const;
     
     /**
      * @brief Gets a const reference to the vector of Location objects in this
@@ -132,14 +132,14 @@ public:
      * @return A const reference to the vector of Location objects in this
      * DataSet
      */
-    VectorLocation getVectorLocation();
+    const VectorLocation& getVectorLocation() const;
 
     /**
      * @brief Gets a const reference to the vector of labels in this DataSet
      * Query method
      * @return A const reference to the vector of labels in this DataSet
      */
-    VectorInt getVectorLabels();
+    const VectorInt& getVectorLabels() const;
     
     /**
      * @brief Obtains a string with information about this DataSet object, 
@@ -158,7 +158,7 @@ public:
      * Query method
      * @return string with information about this CrimeSet object
      */
-    std::string toString() ;
+    std::string toString() const;
 
     /**
      * @brief Sets a new value for the instance instanceIndex at the 
@@ -224,7 +224,7 @@ public:
      * @param fileName The name of the file where the DataSet will be saved. 
      * Input parameter
      */
-    void save(std::string fileName);
+    void save(const std::string& fileName);
 
     /**
      * @brief Loads into this object the DataSet information stored in the 
@@ -248,7 +248,7 @@ public:
      * if the given file cannot be opened or if an error occurs while reading
      * from the file. 
      */
-    void load(std::string fileName);
+    void load(const std::string& fileName);
     
     /**
      * @brief Gets a new DataSet from this DataSet. The DataSet will contain 
@@ -275,7 +275,7 @@ public:
      * Input parameter
      * @return A reduced DataSet
      */
-    DataSet getReducedDataSet(Clustering clustering);
+    DataSet getReducedDataSet(const Clustering& clustering) const;
     
    /**
     * Returns the index (position) of the nearest instance in this DataSet to
@@ -297,7 +297,7 @@ public:
     * @return An integer with the index (position) of the nearest instance to
     * @p instance. It returns -1 if this DataSet does not contain any instance.
     */    
-    int nearestInstance(VectorInt instance, bool selected[]);
+    int nearestInstance(const VectorInt &instance,const bool selected[]) const;
 
     /**
      * @brief Overloading of the () operator to access to the value at a
@@ -322,6 +322,9 @@ public:
      * @return A reference to the value at the given position
      */
     int& operator()(int instanceIndex, int locationIndex);
+
+    friend std::istream& operator>>(std::istream &is, DataSet &dataset);
+    friend void classify(const DataSet& datasetModel, DataSet &datasetToClassify, int K1, int K2, bool doReductionDimensionality);
 
 private:
     /**
@@ -370,7 +373,7 @@ private:
  * @param dataset The DataSet object. Input parameter
  * @return A reference to the output stream
  */
-std::ostream operator<<(std::ostream os, DataSet dataset);
+std::ostream& operator<<(std::ostream& os, const DataSet& dataset);
 
 /**
  * @brief Overloading of the stream extraction operator for DataSet class.
@@ -386,7 +389,7 @@ std::ostream operator<<(std::ostream os, DataSet dataset);
  * @param dataset The DataSet object to be filled. Input/output parameter
  * @return A reference to the input stream
  */
-std::istream operator>>(std::istream is, DataSet dataset);
+std::istream& operator>>(std::istream &is, DataSet &dataset);
 
 /**
  * Classifies the instances of the dataset @p dataSetToClassify with 
@@ -410,7 +413,7 @@ std::istream operator>>(std::istream is, DataSet dataset);
  * @param doReductionDimensionality Indicates whether or not dimensionality 
  * reduction should be applied using the clustering algorithm. Input parameter
  */
-void classify(DataSet datasetModel, DataSet datasetToClassify, 
+void classify(const DataSet& datasetModel, DataSet &datasetToClassify, 
         int K1, int K2, bool doReductionDimensionality);
 
 #endif /* DATASET_H */

@@ -43,7 +43,7 @@ public:
      * @param orig the VectorInt object used as source for the copy. Input
      * parameter
      */
-    VectorInt(VectorInt orig);
+    VectorInt(const VectorInt& orig);
     
     /**
      * @brief Destructor
@@ -57,21 +57,21 @@ public:
      * parameter
      * @return A reference to this object
      */
-    VectorInt operator=(VectorInt orig);
+    VectorInt& operator=(const VectorInt& orig);
     
     /**
      * @brief Gets the number of elements in the vector of this object
      * Query method
      * @return The number of elements
      */
-    int getSize();
+    int getSize() const;
     
     /**
      * @brief Gets the capacity of the vector in this object
      * Query method
      * @return The capacity of the vector in this object
      */
-    int getCapacity();
+    int getCapacity() const;
     
     /**
      * @brief Compares the integer vectors of this object and the provided 
@@ -88,7 +88,7 @@ public:
      * @return The number of identical elements in the vectors of this
      * and the provided object.
      */
-    int countIdenticalElements(VectorInt other);
+    int countIdenticalElements(const VectorInt &other) const;
     
     /**
      * @brief Obtains a string with information about this VectorInt object, 
@@ -100,7 +100,7 @@ public:
      * Query method
      * @return string with information about this VectorInt object
      */
-    std::string toString();
+    std::string toString() const;
 
     /**
      * @brief Gets the Euclidean distance between this and the provided object.
@@ -117,7 +117,7 @@ public:
      * @param other A VectorInt. Input parameter
      * @return The Euclidean distance between this and the provided objects
      */
-    double distance(VectorInt other);
+    double distance(const VectorInt& other) const;
     
     /**
      * @brief Assigns the provided value to all the elements in this vector
@@ -154,7 +154,7 @@ public:
      * given position is not valid.
      * @return A const reference to the integer element at the given position
      */
-    int at(int pos);
+    const int& at(int pos) const;
     
     /**
      * @brief Gets a reference to the integer element at the given position. 
@@ -164,7 +164,7 @@ public:
      * given position is not valid
      * @return A reference to the integer element at the given position.
      */
-    int at(int pos);
+    int& at(int pos);
 
     /**
      * @brief Overloading of the [] operator for VectorInt class
@@ -172,7 +172,7 @@ public:
      * @param index index of the element. Input parameter
      * @return A constant reference to the element at position @p index
      */
-    int operator[](int index);
+    const int& operator[](int index) const;
     
     /**
      * @brief Overloading of the [] operator for VectorInt class
@@ -180,7 +180,7 @@ public:
      * @param index index of the element. Input parameter
      * @return A reference to the element at position @p index
      */
-    int operator[](int index);
+    int& operator[](int index);
 
     /**
      * @brief Overloads the operator += for the VectorInt class. 
@@ -193,7 +193,8 @@ public:
      * @return A reference to this object.
      */
     VectorInt operator+=(int value);
-    
+    VectorInt& grow(int capMod = BLOCK_SIZE);
+    VectorInt& resize(int toRes);
 private:
     /**
      * Pointer to a dynamic array of integers
@@ -230,7 +231,7 @@ private:
  * @param vector The VectorInt object. Input parameter
  * @return os A reference to the output stream
  */
-std::ostream operator<<(std::ostream os, VectorInt vector);
+std::ostream& operator<<(std::ostream& os,const VectorInt& vector);
 
 /**
  * @brief Overloading of the stream extraction operator for VectorInt class.
@@ -246,7 +247,7 @@ std::ostream operator<<(std::ostream os, VectorInt vector);
  * @param vector The VectorInt object to be filled. Input/output parameter
  * @return A reference to the input stream
  */
-std::istream operator>>(std::istream is, VectorInt vector);
+std::istream& operator>>(std::istream& is, VectorInt& vector);
 
 #endif /* VECTORINT_H */
 

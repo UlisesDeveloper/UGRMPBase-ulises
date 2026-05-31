@@ -14,16 +14,16 @@ FINISHED W LOCATION AND VECTORLOCATION
 
 /**
  * @file main.cpp
- * @author Silvia Acid Carrillo <acid@decsai.ugr.es>
- * @author Andrés Cano Utrera <acu@decsai.ugr.es>
- * @author Luis Castillo Vidal <L.Castillo@decsai.ugr.es>
- * 
+ * @author estudiante1: Romero López, Ulises
+ * @author estudiante2: Ruiz Cano, Juan
  * Created on 24 de octubre de 2025, 9:27
  */
 
 #include <iostream>
 
 #include <cstring>
+#include <fstream>
+#include <regex>
 #include <string>
 
 #include "DataSet.h"
@@ -61,6 +61,7 @@ void showHelp(std::ostream& outputStream, const string &message) {
         "to be classified (test dataset)" << endl;
     outputStream << endl;
 }
+
 
 /**
  * The purpose of this program is to read two DataSet objects from dts files, 
@@ -112,13 +113,69 @@ int main(int argc, char* argv[]) {
     bool hasBeenReadInitialParameters = false; 
     int indexInputFile = -1; // index of the input file in argv
 
-    // Loop to process program arguments
+    
 
+    // Loop to process program arguments
+    for(int i = 1; i < argc; i++){
+        string arg = argv[i];
+        if("-K1" == arg){
+            if ((i + 1) >= argc){
+                showHelp(cerr, "K1 value not provided after -K1");
+                return 1;
+            }
+            K1 = atoi(argv[i + 1]);            
+            i++;
+        } else if ("-K2" == arg){
+            if ((i + 1) >= argc){
+                showHelp(cerr, "K2 value not provided after -K2");
+                return 1;
+            }
+            K2 = atoi(argv[i + 1]);            
+            i++;
+        } else if ("-nr" == arg){
+            doReduction = false;
+        } else if ("-o" == arg){
+
+            
+            if ((i + 1) >= argc){
+                showHelp(cerr, "Output filename not provided after -o");
+                return 1;
+            }
+            outputFileName = argv[i + 1];
+            i++;
+        } else if (!arg.empty() && arg[0] == '-'){
+            showHelp(cerr, "Invalid option " + arg);
+            return 1;
+        } else {
+            hasBeenReadInitialParameters = true;
+            indexInputFile = i;
+            break;
+        }
+    }
+
+    if (indexInputFile == -1){
+        showHelp(cerr, "Name of training dataset not provided");
+        return 1;
+    }
+    if ((indexInputFile + 1) >= argc){
+        showHelp(cerr, "Name of test dataset not provided");
+        return 1;
+    }
+    if ((indexInputFile + 2) != argc){
+        showHelp(cerr, "Too many parameters.");
+        return 1;
+    }
+
+    string trainingFile = argv[indexInputFile];
+    string testFile = argv[indexInputFile + 1];
     // Load training and test datasets
+    trainingDataset.load(trainingFile);
+    testDataset.load(testFile);
 
     // Classify the test dataset
-
+    classify(trainingDataset, testDataset, K1, K2 , doReduction);
     // Save the classified test dataset in the given output file
+    testDataset.save(outputFileName);
 
     return 0;
 }

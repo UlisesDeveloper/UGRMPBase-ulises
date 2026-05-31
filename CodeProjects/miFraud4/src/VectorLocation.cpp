@@ -9,6 +9,7 @@
 #include "VectorLocation.h"
 #include <string>
 #include <istream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -451,6 +452,11 @@ using namespace std;
  
 
     return *(this);
+}
+
+VectorLocation VectorLocation::operator+=(Location location){
+    append(location);
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const VectorLocation& vector){

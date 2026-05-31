@@ -18,6 +18,7 @@
 #include "Clustering.h"
 
 #include <cmath>
+#include <stdexcept>
 
 
 
@@ -317,12 +318,47 @@ double Clustering::calculateSumWCV() const{
 bool operator<(const Clustering& clustering1,const  Clustering& clustering2){
     bool condition = false;
 
-    if (clustering1.getSumWCV() < clustering2.getSumWC() ) || ((clustering1.getSumWCV() == clustering2.getSumWC()) && (clustering1.getNumIterations() < clustering2.getNumIterations() )){
+    if ((clustering1.getSumWCV() < clustering2.getSumWCV() ) || ((clustering1.getSumWCV() == clustering2.getSumWCV()) && (clustering1.getNumIterations() < clustering2.getNumIterations() ))){
         condition = true;
     }
-
-
-
     return condition;
 }
 
+bool operator>(const Clustering& clustering1,const  Clustering& clustering2){
+    bool condition = false;
+
+    if ((clustering1.getSumWCV() > clustering2.getSumWCV() ) || ((clustering1.getSumWCV() == clustering2.getSumWCV()) && (clustering1.getNumIterations() > clustering2.getNumIterations() ))){
+        condition = true;
+    }
+    return condition;
+}
+
+bool operator==(const Clustering& clustering1,const  Clustering& clustering2){
+   //return clustering1.isEquivalentTo(clustering2);
+    return (clustering1.getSumWCV() == clustering2.getSumWCV()) && 
+          (clustering1.getNumIterations() == clustering2.getNumIterations()) &&
+          (clustering1.getK() == clustering2.getK());
+}
+
+
+bool operator!=(const Clustering& clustering1,const  Clustering& clustering2){
+    return !(clustering1 == clustering2);
+}
+
+bool operator<=(const Clustering& clustering1,const  Clustering& clustering2){
+    bool res = false;
+    if(clustering1 < clustering2 || clustering1 == clustering2){
+        res = true;
+    }
+
+    return res;
+}
+
+bool operator>=(const Clustering& clustering1,const  Clustering& clustering2){
+    bool res = false;
+    if(clustering1 > clustering2 || clustering1 == clustering2){
+        res = true;
+    }
+
+    return res;
+}

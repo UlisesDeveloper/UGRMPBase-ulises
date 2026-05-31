@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <stdexcept>
 
 using namespace std;
 
@@ -262,4 +263,45 @@ VectorInt& VectorInt::resize(int toRes){
  
 
     return *(this);
+}
+
+
+
+const int& VectorInt::operator[](int index) const{
+    return _values[index];
+}
+
+int& VectorInt::operator[](int index){
+    return _values[index];
+}
+
+VectorInt VectorInt::operator+=(int value){
+    append(value);
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream& os,const VectorInt& vector){
+    os << vector.toString();
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, VectorInt& vector){
+    
+    int temp;
+    is >> temp;
+    //Suppose first thing recieved is number of elements and then the elements themselves
+
+    if (temp < 0){
+        throw out_of_range("numElements neg");
+    }
+
+    vector.clear();
+
+    int current;
+    for(int i = 0; i < temp; i++){
+        is >> current;
+        vector.append(current);
+    }
+
+    return is;
 }

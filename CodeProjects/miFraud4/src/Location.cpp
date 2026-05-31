@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <stdexcept>
 
 
 #include "Location.h"
