@@ -10,9 +10,19 @@
  */
 
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <regex>
+#include <cmath>
+#include <vector>
+#include <functional>
+#include <fstream>
+#include <iomanip>
 
+#define private public
 #include "DataSet.h"
 #include "Clustering.h"
+#undef private
 
 using namespace std;
 
@@ -36,6 +46,50 @@ void showHelp(std::ostream& outputStream, const string &message) {
     outputStream << "<inputFile.dts>: name of the input dataset file" << endl;
     outputStream << endl;
 }
+
+
+
+
+
+/*
+//only for unit tests
+
+// Inclusión de ficheros .h que deben eliminarse tras comprobar los tests de unidad
+#include <sstream>
+#include <regex>
+#include <cmath>
+#include <string>
+
+// Macros que deben eliminarse tras comprobar los tests de unidad
+#define ENDL "\n"
+#define LOCATION_DEFAULT "0.000000 0.000000"
+#define LOCATION_OTHER "37.200000 -3.600000 Granada"
+#define VECTOR_527 "5 7 7 7 7 7 "
+#define VECTOR_DEFAULT5 "5 0 0 0 0 0 "
+
+// Función auxiliar que usa algún test
+void fill_vlocation(VectorLocation & locs, int size){
+    Location loc;
+    for (int i=0; i < size; i++) {
+        loc.set(i,i,string("Location"+std::to_string(i)));
+        locs.append(loc);
+    }
+}
+
+// Función auxiliar que usa algún test
+void refill_vlocation(VectorLocation &locs, int size){
+    fill_vlocation(locs, size);
+}
+*/
+
+
+
+
+
+
+
+
+
 
 /**
  * The purpose of this program is to read a dataset from a dts file, to reduce 
@@ -63,6 +117,8 @@ void showHelp(std::ostream& outputStream, const string &message) {
  * > build/Fraud3 -K 5 -o /tmp/princeton_training_reduced.dts ../Datasets/princeton_training.dts
  */
 int main(int argc, char* argv[]) {
+    
+    
     DataSet inputDataset, // Input dataset
         outputDataset; // Output dataset with reduced dimensionality
 
@@ -120,6 +176,8 @@ int main(int argc, char* argv[]) {
     outputDataset.save(outputFileName);
     
     return 0;
+
+    
 }
 
 

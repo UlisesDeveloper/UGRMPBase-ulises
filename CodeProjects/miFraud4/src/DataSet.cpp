@@ -14,9 +14,12 @@
 
 #include <string>
 #include <iostream>
+#include <cmath>
+#include <stdexcept>
+
 #include "DataSet.h"
-#include "VectorLocation.h";
-#include "VectorInt.h";
+#include "VectorLocation.h"
+#include "VectorInt.h"
 
 using namespace std;
 
@@ -27,16 +30,17 @@ std::string DataSet::toString() const {
     
     result += _locations.toString();
     result += _labels.toString();
-    for(int instance=0; instance<getNumInstances(); instance++){
-        for(int location=0; location<getNumLocations(); location++){
-            //result += to_string((*this)(instance,location));
-            result += to_string(this->getValue(instance,location));
-            if(location<getNumLocations()-1){
-                result += " ";
+    if (_nLocations > 0) {
+        for (int instance = 0; instance < getNumInstances(); instance++) {
+            for (int location = 0; location < getNumLocations(); location++) {
+                result += to_string(this->getValue(instance, location));
+                if (location < getNumLocations() - 1) {
+                    result += " ";
+                }
             }
+            result += "\n";
         }
-        result += "\n";
-    }    
+    }
     return result;
 }
 
@@ -309,4 +313,170 @@ DataSet DataSet::getReducedDataSet(const Clustering& clustering) const{
 
     
     return toRet;
+}
+
+
+int DataSet::nearestInstance(const VectorInt &instance,const bool selected[]) const{
+
+    if (instance.getSize() != _nLocations){
+        throw invalid_argument("diff size");
+    }
+
+    int smallestPos = -1;
+    double smallestTot = 0.0, current = 0.0;
+    
+    bool firstDone = false;
+    for(int i = 0; i < _nInstances; i++){
+        if(!selected[i]){
+            if (!firstDone){
+                firstDone=true;
+                smallestPos = i;
+                smallestTot = 0.0;
+                for (int j = 0; j < _nLocations; j++){
+                    double diff = instance.at(j) - _values[i][j];
+                    smallestTot += diff * diff;
+                }
+            } else {
+
+
+                current = 0.0;
+                for (int j = 0; j < _nLocations; j++){
+                    double diff = instance.at(j) - _values[i][j];
+                    current += diff * diff;
+                }
+                if (current < smallestTot){
+                    smallestTot = current;
+                    smallestPos=i;
+                }
+            }
+        }       
+    }
+    return smallestPos;
+}
+
+//i think it's like this not sure tho
+const int& DataSet::operator()(int instanceIndex, int locationIndex) const{
+
+    return _values[instanceIndex][locationIndex];
+}
+
+int& DataSet::operator()(int instanceIndex, int locationIndex){
+    
+    return _values[instanceIndex][locationIndex];
+}
+
+std::ostream& operator<<(std::ostream &os, const DataSet& dataset){
+
+    os << dataset.toString(); 
+    return os;
+}
+
+
+std::istream& operator>>(std::istream& is, DataSet &dataset){
+    dataset.clear();
+    try {
+        dataset._locations.load(is);
+        dataset._nLocations = dataset._locations.getSize();
+
+        is >> dataset._nInstances;
+        if (dataset._nInstances < 0 || dataset._nLocations < 0) {
+            throw out_of_range("instances/locations cannot be negative");
+        }
+
+        dataset._labels.clear();
+        for (int i = 0; i < dataset._nInstances; i++) {
+            int tempLabel;
+            is >> tempLabel;
+            dataset._labels.append(tempLabel);
+        }
+
+        dataset._values = new int*[dataset._nInstances];
+        for (int i = 0; i < dataset._nInstances; i++) {
+            dataset._values[i] = new int[dataset._nLocations];
+        }
+
+        for (int i = 0; i < dataset._nInstances; i++) {
+            for (int j = 0; j < dataset._nLocations; j++) {
+                is >> dataset._values[i][j];
+            }
+        }
+    } catch (...) {
+        dataset.clear();
+        throw;
+    }
+
+    return is;
+
+}
+
+
+void classify(const DataSet& datasetModel, DataSet &datasetToClassify, int K1, int K2, bool doReductionDimensionality){
+
+    if (datasetModel.getNumLocations() != datasetToClassify.getNumLocations()){
+        throw invalid_argument("diff locs");
+    }
+    if (doReductionDimensionality && K1 <= 0){
+        throw invalid_argument("k1 menor q 0");
+    }
+    if (K2 < 1){
+        throw invalid_argument("K2 menor q 1");
+    }
+    if (K2 > datasetModel.getNumInstances()){
+        throw invalid_argument("K2 mayor q num instancias");
+    }
+
+    DataSet modelData(datasetModel);
+    DataSet toClassifyData(datasetToClassify);
+
+    if (doReductionDimensionality){
+        Clustering clusterer;
+        clusterer.set(modelData.getVectorLocation(), K1);
+        clusterer.run();
+
+        modelData = modelData.getReducedDataSet(clusterer);
+        toClassifyData = toClassifyData.getReducedDataSet(clusterer);
+    }
+
+    for (int row = 0; row < toClassifyData.getNumInstances(); row++){
+        int v0 = 0;
+        int v1 = 0;
+
+
+
+        VectorInt instanceVec(toClassifyData.getNumLocations());
+        for (int col = 0; col < toClassifyData.getNumLocations(); col++){
+            instanceVec.at(col) = toClassifyData.getValue(row, col);
+        }
+
+        bool* selected = new bool[modelData.getNumInstances()];
+        for (int i = 0; i < modelData.getNumInstances(); i++){
+            selected[i] = false;
+        }
+
+
+
+        
+        for (int k = 0; k < K2; k++){
+            int nearest = modelData.nearestInstance(instanceVec, selected);
+            if (nearest == -1){
+                k=K2;
+                continue;
+            }
+            selected[nearest] = true;
+            if (modelData.getLabel(nearest) == 1){
+                v1++;
+            } else {
+                v0++;
+            }
+        }
+
+        delete[] selected;
+
+        if (v0 >= v1){
+            datasetToClassify.setLabel(row, 0);
+        } else {
+            datasetToClassify.setLabel(row, 1);
+        }
+    }
+
 }
